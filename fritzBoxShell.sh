@@ -27,13 +27,20 @@ dir=$(dirname "$0")
 
 DIRECTORY=$(cd "$dir" && pwd)
 
+## loading helper for debugging, may not be present in production
+if [[ -f "$DIRECTORY/helper.sh" ]]; then
+  source "$DIRECTORY/helper.sh"
+else
+  printDebug() { :; } #overriding printDebug to prevent "command not found"
+fi
+
+## loading local config with credentials
 if [ -f "$DIRECTORY/fritzBoxShellConfig.local" ]; then
-  echo "Reading config from file [$DIRECTORY/fritzBoxShellConfig.local]"
+  printDebug "Reading config from file [$DIRECTORY/fritzBoxShellConfig.local]"
   source "$DIRECTORY/fritzBoxShellConfig.local"
 fi
 
 source "$DIRECTORY/fritzBoxShellConfig.sh"
-source "$DIRECTORY/helper.sh"
 
 #******************************************************#
 #*********************** SCRIPT ***********************#
@@ -93,10 +100,8 @@ option1="$1"
 option2="$2"
 option3="$3"
 
-if [[ "true" == $debug ]]; then
-  printDebug "DEBUGGING IS ENABLED"
-  printDebug "Options: \$1: [$1] \$2: [$2] \$3: [$3]"
-fi
+printDebug "DEBUGGING IS ENABLED"
+printDebug "Options: \$1: [$1] \$2: [$2] \$3: [$3]"
 
 ### ----------------------------------------------------------------------------------------------------- ###
 ### --------- FUNCTION getSID is used to get a SID for all requests through AHA-HTTP-Interface----------- ###

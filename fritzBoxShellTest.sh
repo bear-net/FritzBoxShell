@@ -12,29 +12,23 @@ dir=$(dirname "$0")
 
 DIRECTORY=$(cd "$dir" && pwd)
 source "$DIRECTORY/fritzBoxShellConfig.sh"
+source "$DIRECTORY/helper.sh"
 
-# Set Colors
-reset=$(tput sgr0)
-cyan=$(tput setaf 6)
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-tan=$(tput setaf 3)
-blue=$(tput setaf 6)
+while [[ $# -gt 0 ]]; do
+  key="$1"
 
-e_success() {
-	slen="$1"
-	alen="$2"
-	shift; shift
-	printf "${green}\\xE2\\x9C\\x94 %-${slen}s %-${alen}s %s${reset}\\n" "$@"
-}
-
-e_error() {
-	len="$1"
-	alen="$2"
-	shift; shift
-  printf "${red}\\xE2\\x9C\\x96 %-${len}s %-${alen}s %s${reset}\\n" "$@"
-}
-
+  case $key in
+    --debugmain)
+    debugmain="--debug"
+		debug="true"
+    shift
+    ;;
+    --debug)
+    debug="true"
+    shift
+    ;;
+  esac
+done
 
 ## declare an array variable
 declare -a services=("WLAN_2G"   "WLAN_2G" "WLAN_5G"    "WLAN_2G" "WLAN"  "LAN"   "DSL"   "WAN"   "LINK"  "IGDWAN" "IGDDSL" "IGDIP" "TAM")
@@ -62,11 +56,13 @@ done
 counter=0
 for i in "${services[@]}"
 do
-	words=$(/bin/bash "$DIRECTORY/fritzBoxShell.sh" "$i" "${actions[$counter]}"|wc -w)
+	result=$(/bin/bash "$DIRECTORY/fritzBoxShell.sh" "$debugmain" "$i" "${actions[$counter]}")
+	printDebug "$result"
+	words=$(echo "$result" | wc -w)
 	if [[ "$words" -ge ${minwords[$counter]} ]]; then
-		e_success "$maxservicelen" "$maxactionlen" "$i" "${actions[$counter]}" "is working"
+		printTestResultSuccess "$maxservicelen" "$maxactionlen" "$i" "${actions[$counter]}" "is working"
 	else
-		e_error "$maxservicelen" "$maxactionlen" "$i" "${actions[$counter]}" "is not working"
+		printTestResultError "$maxservicelen" "$maxactionlen" "$i" "${actions[$counter]}" "is not working"
 	fi
 	counter=$((counter+1))
 done
