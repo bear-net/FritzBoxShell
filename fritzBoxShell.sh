@@ -26,6 +26,12 @@ version=1.0.5
 dir=$(dirname "$0")
 
 DIRECTORY=$(cd "$dir" && pwd)
+
+if [ -f "$DIRECTORY/fritzBoxShellConfig.local" ]; then
+  echo "Reading config from file [$DIRECTORY/fritzBoxShellConfig.local]"
+  source "$DIRECTORY/fritzBoxShellConfig.local"
+fi
+
 source "$DIRECTORY/fritzBoxShellConfig.sh"
 
 #******************************************************#
@@ -235,7 +241,7 @@ LANstate() {
 ### ----------------------------------------------------------------------------------------------------- ###
 
 DSLstate() {
-		location="/igdupnp/control/wandslifconfig1"
+		location="/upnp/control/wandslifconfig1"
 		uri="urn:dslforum-org:service:WANDSLInterfaceConfig:1"
 		action='GetInfo'
 
@@ -293,8 +299,8 @@ WANDSLLINKstate() {
 ### ----------------------------------------------------------------------------------------------------- ###
 
 IGDWANstate() {
-		location="/igdupnp/control/WANCommonIFC1"
-		uri="urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1"
+		location="/upnp/control/wancommonifconfig1"
+		uri="urn:dslforum-org:service:WANCommonInterfaceConfig:1"
 		action='GetAddonInfos'
 
 		readout
@@ -306,8 +312,8 @@ IGDWANstate() {
 ### ----------------------------------------------------------------------------------------------------- ###
 
 IGDDSLLINKstate() {
-		location="/igdupnp/control/WANDSLLinkC1"
-		uri="urn:schemas-upnp-org:service:WANDSLLinkConfig:1"
+		location="/upnp/control/wandsllinkconfig1"
+		uri="urn:dslforum-org:service:WANDSLLinkConfig:1"
 		action='GetDSLLinkInfo'
 
 		readout
@@ -339,8 +345,8 @@ IGDDSLLINKstate() {
 ### ----------------------------------------------------------------------------------------------------- ###
 
 IGDIPstate() {
-		location="/igdupnp/control/WANIPConn1"
-		uri="urn:schemas-upnp-org:service:WANIPConnection:1"
+		location="/upnp/control/wanipconnection1"
+		uri="urn:dslforum-org:service:WANIPConnection:1"
 		action='GetConnectionTypeInfo'
 
 		readout
