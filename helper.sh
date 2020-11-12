@@ -1,9 +1,13 @@
+#!/usr/bin/env bash
+
 # Set Colors
 reset=$(tput sgr0)
+# shellcheck disable=SC2034
 cyan=$(tput setaf 6)
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 tan=$(tput setaf 3)
+# shellcheck disable=SC2034
 blue=$(tput setaf 6)
 
 ### ----------------------------------------------------------------------------------------------------- ###
@@ -11,14 +15,8 @@ blue=$(tput setaf 6)
 ### ------------------ The caller will be mentioned as script:line_number ------------------------------- ###
 ### ----------------------------------------------------------------------------------------------------- ###
 printDebug() {
-  if [[ "true" == "$debug" ]]; then
-    local varName=""
-    if [[ "$#" -ge "2" ]]; then
-      local varName="[var=$1]"
-      shift
-    fi
-
-    printf "${tan}[DEBUG][%s]%s %s${reset}\\n" "$(caller | awk '{printf("%s:%s\n",$2,$1)}')" "$varName" "$*"
+  if [[ "true" == "$DEBUG" ]]; then
+    printf "${tan}[DEBUG][%s] %s${reset}\\n" "$(caller | awk '{printf("%s:%s\n",$2,$1)}')" "$*"
   fi
 }
 

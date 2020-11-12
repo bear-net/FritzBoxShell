@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # shellcheck disable=SC1090,SC2154
 
 #************************************************************#
@@ -26,6 +26,9 @@ version=1.0.5
 dir=$(dirname "$0")
 
 DIRECTORY=$(cd "$dir" && pwd)
+
+# setting debug to empty string to reset it if already set by environment - will be set later if necessary
+export DEBUG="false"
 
 ## loading helper for debugging, may not be present in production
 if [[ -f "$DIRECTORY/helper.sh" ]]; then
@@ -79,7 +82,7 @@ while [[ $# -gt 0 ]]; do
     shift ; shift
     ;;
     --debug)
-    debug="true"
+    export DEBUG="true"
     shift
     ;;
 		*)    # unknown option
@@ -317,9 +320,9 @@ WANDSLLINKstate() {
 ### ----------------------------------------------------------------------------------------------------- ###
 
 IGDWANstate() {
-		location="/upnp/control/wancommonifconfig1"
-		uri="urn:dslforum-org:service:WANCommonInterfaceConfig:1"
-		action='GetAddonInfos'
+    location="/igdupnp/control/WANCommonIFC1"
+    uri="urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1"
+    action='GetAddonInfos'
 
 		readout
 
@@ -369,6 +372,8 @@ IGDIPstate() {
 
 		readout
 
+    location="/igdupnp/control/WANIPConn1"
+		uri="urn:schemas-upnp-org:service:WANIPConnection:1"
 		action='GetAutoDisconnectTime'
 
 		readout

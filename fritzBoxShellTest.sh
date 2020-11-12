@@ -18,13 +18,8 @@ while [[ $# -gt 0 ]]; do
   key="$1"
 
   case $key in
-    --debugmain)
-    debugmain="--debug"
-		debug="true"
-    shift
-    ;;
     --debug)
-    debug="true"
+    export DEBUG="true"
     shift
     ;;
   esac
@@ -56,7 +51,7 @@ done
 counter=0
 for i in "${services[@]}"
 do
-	result=$(/bin/bash "$DIRECTORY/fritzBoxShell.sh" "$debugmain" "$i" "${actions[$counter]}")
+  result=$(/bin/bash "$DIRECTORY/fritzBoxShell.sh" "$i" "${actions[$counter]}")
 	printDebug "$result"
 	words=$(echo "$result" | wc -w)
 	if [[ "$words" -ge ${minwords[$counter]} ]]; then
